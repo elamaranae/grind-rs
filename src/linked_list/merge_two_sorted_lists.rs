@@ -5,6 +5,8 @@
    of the first two lists. Return the head of the merged linked list.
 */
 
+use std::mem;
+
 #[derive(Debug)]
 struct Node {
     val: i32,
@@ -54,16 +56,71 @@ impl PartialEq for List {
 
 impl Eq for List {}
 
-pub fn run(mut list_1: List, mut list_2: List) -> List {
-    List { head: None }
+pub fn run(list_1: List, list_2: List) -> List {
+
+    let mut link_1 = list_1.head;
+    let mut link_2 = list_2.head;
+    let mut head: Link = None;
+    let mut tail = &mut head;
+
+    while link_1.is_some() && link_2.is_some() {
+        if link_1.as_ref().unwrap().val < link_2.as_ref().unwrap().val {
+            let temp = link_1.as_mut().unwrap().next.take();
+            *tail = link_1;
+            link_1 = temp;
+        } else {
+            let temp = link_2.as_mut().unwrap().next.take();
+            *tail = link_2;
+            link_2 = temp;
+        }
+
+        tail = &mut tail.as_mut().unwrap().next;
+    }
+
+    *tail = if link_1.is_some() { link_1 } else { link_2 };
+
+    List { head }
 }
 
 #[test]
 fn case_0() {
-   let list_1 = List::from_array(&[1,2,3,7,4]); 
-   let list_2 = List::from_array(&[1,2,3,7,4]); 
+   let list_1 = List::from_array(&[1,2,3,4,7]); 
+   let list_2 = List::from_array(&[1,2,3,4,7]); 
+   let expected = List::from_array(&[1,1,2,2,3,3,4,4,7,7]);
 
-   // let merged = run(list1, list2);
+   let actual = run(list_1, list_2);
 
-   assert_eq!(list_1, list_2);
+   assert_eq!(actual, expected);
+}
+
+#[test]
+fn case_1() {
+   let list_1 = List::from_array(&[]); 
+   let list_2 = List::from_array(&[1,2,3,4,7]); 
+   let expected = List::from_array(&[1,2,3,4,7]); 
+
+   let actual = run(list_1, list_2);
+   assert_eq!(actual, expected);
+}
+
+#[test]
+fn case_2() {
+   let list_1 = List::from_array(&[]); 
+   let list_2 = List::from_array(&[]); 
+   let expected = List::from_array(&[]);
+
+   let actual = run(list_1, list_2);
+
+   assert_eq!(actual, expected);
+}
+
+#[test]
+fn case_3() {
+   let list_1 = List::from_array(&[1,2,4]); 
+   let list_2 = List::from_array(&[1,3,4]); 
+   let expected = List::from_array(&[1,1,2,3,4,4]);
+
+   let actual = run(list_1, list_2);
+
+   assert_eq!(actual, expected);
 }
