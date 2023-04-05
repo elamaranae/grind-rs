@@ -5,8 +5,6 @@
    of the first two lists. Return the head of the merged linked list.
 */
 
-use std::mem;
-
 #[derive(Debug)]
 struct Node {
     val: i32,
@@ -21,7 +19,7 @@ pub struct List {
 }
 
 impl List {
-    fn from_array(arr: &[i32]) -> List {
+    fn from_array(arr: &[i32]) -> Self {
         let mut head: Link = None;
 
         for val in arr.iter().rev() {
@@ -29,7 +27,7 @@ impl List {
             head = Some(link);
         }
 
-        List { head }
+        Self { head }
     }
 }
 

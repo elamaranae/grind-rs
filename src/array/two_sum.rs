@@ -14,9 +14,9 @@ pub fn run(nums: Vec<i32>, target: i32) -> [usize; 2] {
 
         if elements.contains_key(&pair_1) {
             return [*elements.get(&pair_1).unwrap(), index];
-        } else {
-            elements.insert(*pair_0, index);
         }
+
+        elements.insert(*pair_0, index);
     }
 
     [0, 0]
