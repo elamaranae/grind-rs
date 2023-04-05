@@ -2,21 +2,6 @@
    Given an array of integers nums and an integer target, return indices of the two numbers such
    that they add up to target. You may assume that each input would have exactly one solution, and
    you may not use the same element twice. You can return the answer in any order.
-
-   Example 1:
-
-   Input: nums = [2,7,11,15], target = 9 Output: [0,1] Explanation: Because nums[0] + nums[1] == 9,
-   we return [0, 1].
-
-   Example 2:
-
-   Input: nums = [3,2,4], target = 6 Output: [1,2] Example 3:
-
-   Input: nums = [3,3], target = 6 Output: [0,1]
-
-   Constraints:
-
-   2 <= nums.length <= 104 -109 <= nums[i] <= 109 -109 <= target <= 109
 */
 
 use std::collections::HashMap;
@@ -55,3 +40,11 @@ fn case_1() {
 fn case_2() {
     assert_eq!(run(vec![3, 3], 6), [0, 1]);
 }
+
+/*
+ * 1. When the number and it's complement are same, care needs to be taken to not consider the
+ *    number's presence as it's complement's presence. This is why elements are inserted in hashmap
+ *    after checking for it's complement's present and not before.
+ * 2. Alternative approach: Sort the array and have two pointers (one at end and another at start),
+ *    and keep converging them until they intersect or desired sum is achieved.
+*/
