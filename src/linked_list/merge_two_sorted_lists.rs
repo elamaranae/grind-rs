@@ -55,27 +55,26 @@ impl PartialEq for List {
 impl Eq for List {}
 
 pub fn run(list_1: List, list_2: List) -> List {
-
-    let mut link_1 = list_1.head;
-    let mut link_2 = list_2.head;
+    let mut head_1 = list_1.head;
+    let mut head_2 = list_2.head;
     let mut head: Link = None;
     let mut tail = &mut head;
 
-    while link_1.is_some() && link_2.is_some() {
-        if link_1.as_ref().unwrap().val < link_2.as_ref().unwrap().val {
-            let temp = link_1.as_mut().unwrap().next.take();
-            *tail = link_1;
-            link_1 = temp;
+    while head_1.is_some() && head_2.is_some() {
+        if head_1.as_ref().unwrap().val < head_2.as_ref().unwrap().val {
+            let temp = head_1.as_mut().unwrap().next.take();
+            *tail = head_1;
+            head_1 = temp;
         } else {
-            let temp = link_2.as_mut().unwrap().next.take();
-            *tail = link_2;
-            link_2 = temp;
+            let temp = head_2.as_mut().unwrap().next.take();
+            *tail = head_2;
+            head_2 = temp;
         }
 
         tail = &mut tail.as_mut().unwrap().next;
     }
 
-    *tail = if link_1.is_some() { link_1 } else { link_2 };
+    *tail = if head_1.is_some() { head_1 } else { head_2 };
 
     List { head }
 }
