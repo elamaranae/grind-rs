@@ -31,57 +31,38 @@ impl List {
         for val in arr.iter().rev() {
             let is_head_none = head.is_none();
             let link = Rc::new(RefCell::new(Node { val: *val, next: head }));
-            if is_head_none {
-                tail_node = Some(link.clone());
-            }
+            if is_head_none { tail_node = Some(link.clone()); }
             head = Some(link);
         }
 
-        if let Some(close_index) = close {
-            let mut close_node = head.clone();
+        if close.is_none() || tail_node.is_none() { return Self { head }; }
 
-            for _ in 0..close_index {
-                let n = close_node.unwrap();
-                close_node = n.borrow().next.clone();
+        let mut close_node = head.clone();
 
-                if close_node.is_none() {
-                    break;
-                }
-            }
+        for _ in 0..close.unwrap() {
+            if close_node.is_none() { break; }
 
-            if let Some(tail) = tail_node {
-                tail.borrow_mut().next = close_node;
-            }
+            let n = close_node.unwrap();
+            close_node = n.borrow().next.clone();
         }
+
+        tail_node.unwrap().borrow_mut().next = close_node;
 
         Self { head }
     }
 
     fn has_cycle(&self) -> bool {
         let mut slow = self.head.clone();
+        let mut fast = self.head.clone();
 
-        if slow.is_none() {
-            return false;
-        }
 
-        let mut fast = slow.clone().unwrap().borrow().next.clone();
+        while slow.is_some() && fast.is_some() && fast.as_ref().unwrap().borrow().next.is_some() {
+            slow = slow.unwrap().borrow().next.clone();
+            fast = fast.unwrap().borrow().next.as_ref().unwrap().borrow().next.clone();
 
-        if fast.is_none() {
-            return false;
-        }
-
-        while slow.is_some() && fast.is_some() {
-            if Rc::ptr_eq(slow.as_ref().unwrap(), fast.as_ref().unwrap()) {
+            if fast.is_some() && Rc::ptr_eq(slow.as_ref().unwrap(), fast.as_ref().unwrap()) {
                 return true;
             }
-
-            slow = slow.unwrap().borrow().next.clone();
-            fast = fast.unwrap().borrow().next.clone();
-
-            if fast.is_none() {
-                return false;
-            }
-            fast = fast.unwrap().borrow().next.clone();
         }
 
         false
@@ -193,6 +174,20 @@ fn case_10() {
 #[test]
 fn case_11() {
     let list_1 = List::new(&[1], Some(5));
+
+    assert!(!list_1.has_cycle());
+}
+
+#[test]
+fn case_12() {
+    let list_1 = List::new(&[1,2,3,4], None);
+
+    assert!(!list_1.has_cycle());
+}
+
+#[test]
+fn case_13() {
+    let list_1 = List::new(&[], Some(2));
 
     assert!(!list_1.has_cycle());
 }
