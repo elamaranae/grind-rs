@@ -55,7 +55,6 @@ impl List {
         let mut slow = self.head.clone();
         let mut fast = self.head.clone();
 
-
         while slow.is_some() && fast.is_some() && fast.as_ref().unwrap().borrow().next.is_some() {
             slow = slow.unwrap().borrow().next.clone();
             fast = fast.unwrap().borrow().next.as_ref().unwrap().borrow().next.clone();
@@ -188,6 +187,13 @@ fn case_12() {
 #[test]
 fn case_13() {
     let list_1 = List::new(&[], Some(2));
+
+    assert!(!list_1.has_cycle());
+}
+
+#[test]
+fn case_14() {
+    let list_1 = List::new(&[1,2,3,4,5], Some(5));
 
     assert!(!list_1.has_cycle());
 }
